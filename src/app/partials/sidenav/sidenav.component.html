@@ -9,5 +9,8 @@
     <a mat-list-item> <mat-icon>phone</mat-icon> Contacts </a>
     <a mat-list-item> <mat-icon>add</mat-icon> Create Contact </a>
     <a mat-list-item> <mat-icon>nature_people</mat-icon> Activities </a>
+    <a mat-list-item (click)="logout()" *ngIf="isLoggedIn$ | async">
+      <mat-icon>logout</mat-icon> Logout
+    </a>
   </mat-nav-list>
 </div>

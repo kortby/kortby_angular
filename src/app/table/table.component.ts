@@ -67,7 +67,6 @@ export class TableComponent implements AfterViewInit {
       .subscribe((data) => {
         this.data = data;
         this.dataSource.data = this.data;
-        console.log(this.dataSource);
       });
   }
 
