@@ -31,7 +31,7 @@
 
         <!-- Title Column -->
         <ng-container matColumnDef="title">
-          <th mat-header-cell *matHeaderCellDef>Title</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
           <td mat-cell *matCellDef="let row">{{ row.title }}</td>
         </ng-container>
 
@@ -41,12 +41,20 @@
           <td mat-cell *matCellDef="let row">{{ row.state }}</td>
         </ng-container>
 
+        <!-- State Column -->
+        <ng-container matColumnDef="author_association">
+          <th mat-header-cell *matHeaderCellDef>Author</th>
+          <td mat-cell *matCellDef="let row">{{ row.author_association }}</td>
+        </ng-container>
+
         <!-- Created Column -->
         <ng-container matColumnDef="created">
           <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
             Created
           </th>
-          <td mat-cell *matCellDef="let row">{{ row.created_at | date }}</td>
+          <td mat-cell *matCellDef="let row">
+            {{ row.created_at | substactedDate: 3:"M/d/yy, h:mm a" }}
+          </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

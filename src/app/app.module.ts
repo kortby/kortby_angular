@@ -11,7 +11,14 @@ import { entityConfig } from './entity-metadata';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule, EffectsModule.forRoot([]), StoreRouterConnectingModule.forRoot(), EntityDataModule.forRoot(entityConfig)],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    EffectsModule.forRoot([]),
+    StoreRouterConnectingModule.forRoot(),
+    EntityDataModule.forRoot(entityConfig),
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

@@ -5,10 +5,11 @@ import {
   ViewChild,
   AfterViewInit,
   OnChanges,
+  OnDestroy,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { merge, of as observableOf } from 'rxjs';
+import { merge, of as observableOf, Subscription } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import {
@@ -24,16 +25,24 @@ import { TableService } from './table.service';
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
 })
-export class TableComponent implements AfterViewInit, OnChanges {
+export class TableComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() searchVal!: string;
 
-  displayedColumns: string[] = ['created', 'state', 'number', 'title'];
+  displayedColumns: string[] = [
+    'number',
+    'title',
+    'created',
+    'state',
+    'author_association',
+  ];
   data: GithubIssue[] = [];
   dataSource = new MatTableDataSource(this.data);
 
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
+
+  subscription!: Subscription;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -47,7 +56,7 @@ export class TableComponent implements AfterViewInit, OnChanges {
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
 
-    merge(this.sort.sortChange, this.paginator.page)
+    this.subscription = merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         startWith({}),
         switchMap(() => {
@@ -108,5 +117,9 @@ export class TableComponent implements AfterViewInit, OnChanges {
     }
 
     this.dataSource.data = this.data;
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

@@ -4,9 +4,7 @@ import { SortDirection } from '@angular/material/sort';
 import { GithubApi } from './table.model';
 import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class TableService {
   constructor(private _httpClient: HttpClient) {}
 

@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 
 import { tap } from 'rxjs/operators';
-import { noop } from 'rxjs';
+import { noop, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { AppState } from '../../reducers';
 import { loginAction } from '../ngrx/auth.action';
@@ -17,6 +17,7 @@ import { AuthService } from '../service/auth.service';
 })
 export class LoginComponent implements OnInit {
   myForm: FormGroup;
+  subscription!: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -38,7 +39,7 @@ export class LoginComponent implements OnInit {
 
   login() {
     const val = this.myForm.value;
-    this.auth
+    this.subscription = this.auth
       .login(val.email, val.password)
       .pipe(
         tap((user) => {
@@ -47,5 +48,9 @@ export class LoginComponent implements OnInit {
         })
       )
       .subscribe(noop, () => alert('login failed here'));
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

@@ -12,9 +12,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { TableService } from './table.service';
+import { MyDatePipe } from '../pipes/my-date.pipe';
 
 @NgModule({
-  declarations: [TableComponent],
+  declarations: [TableComponent, MyDatePipe],
   imports: [
     CommonModule,
     DragDropModule,
@@ -27,5 +29,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     HttpClientModule,
   ],
   exports: [TableComponent],
+  providers: [TableService],
 })
 export class TableModule {}
