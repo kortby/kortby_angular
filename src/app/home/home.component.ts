@@ -7,6 +7,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
   constructor() {}
-
+  searchString!: string;
   ngOnInit() {}
+
+  applySearch(str: string) {
+    this.searchString = str;
+  }
 }

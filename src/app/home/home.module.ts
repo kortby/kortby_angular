@@ -13,6 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
+import { MatInputModule } from '@angular/material/input';
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [HomeComponent],
   imports: [
@@ -21,6 +23,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatIconModule,
     MatButtonModule,
     MatSidenavModule,
+    ReactiveFormsModule,
+    MatInputModule,
     ToolBarModule,
     TableModule,
     SidenavModule,

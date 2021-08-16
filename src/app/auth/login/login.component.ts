@@ -16,7 +16,7 @@ import { AuthService } from '../service/auth.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-  form: FormGroup;
+  myForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private store: Store<AppState>
   ) {
-    this.form = fb.group({
+    this.myForm = fb.group({
       email: ['kortby@gmail.com', [Validators.required, Validators.email]],
       password: ['test', [Validators.required]],
     });
@@ -32,13 +32,16 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {}
 
+  get email() {
+    return this.myForm.get('email');
+  }
+
   login() {
-    const val = this.form.value;
+    const val = this.myForm.value;
     this.auth
       .login(val.email, val.password)
       .pipe(
         tap((user) => {
-          console.log(user);
           this.store.dispatch(loginAction({ user }));
           this.router.navigateByUrl('home');
         })

@@ -5,10 +5,24 @@
   </mat-drawer>
   <mat-drawer-content class="content">
     <div class="header" fxLayout="row">
-      <h1>Data Display</h1>
+      <div fxFlex="80" class="title">
+        <h1>Data Display</h1>
+      </div>
+      <div class="search-container" fxFlex="20">
+        <mat-form-field class="search-field" appearance="fill">
+          <input
+            matInput
+            #searchInput
+            placeholder="Search.."
+            value=""
+            (keyup)="applySearch(searchInput.value)"
+          />
+        </mat-form-field>
+      </div>
     </div>
+
     <div class="table-container">
-      <app-table></app-table>
+      <app-table [searchVal]="searchString"></app-table>
     </div>
   </mat-drawer-content>
 </mat-drawer-container>

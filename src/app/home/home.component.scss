@@ -14,11 +14,19 @@
 }
 
 .header {
-  padding: 40px;
-  font-size: 50px;
-  font-weight: 500;
   background-color: #fff;
   box-shadow: inset 0px 0px 10px #ddd;
+  .search-container {
+    padding: 40px 40px 0;
+    text-align: right;
+  }
+
+  .title {
+    padding: 40px;
+    font-size: 50px;
+    font-weight: 500;
+    text-align: left;
+  }
 }
 
 .table-container {

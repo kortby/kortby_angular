@@ -1,8 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  ViewChild,
+  AfterViewInit,
+  OnChanges,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { merge, Observable, of as observableOf } from 'rxjs';
+import { MatSort } from '@angular/material/sort';
+import { merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import {
@@ -10,15 +16,18 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
+import { GithubIssue } from './table.model';
+import { TableService } from './table.service';
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
 })
-export class TableComponent implements AfterViewInit {
+export class TableComponent implements AfterViewInit, OnChanges {
+  @Input() searchVal!: string;
+
   displayedColumns: string[] = ['created', 'state', 'number', 'title'];
-  exampleDatabase!: ExampleHttpDatabase | null;
   data: GithubIssue[] = [];
   dataSource = new MatTableDataSource(this.data);
 
@@ -29,11 +38,12 @@ export class TableComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private _httpClient: HttpClient) {}
+  constructor(
+    private _httpClient: HttpClient,
+    private readonly tableService: TableService
+  ) {}
 
   ngAfterViewInit() {
-    this.exampleDatabase = new ExampleHttpDatabase(this._httpClient);
-
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
 
@@ -42,11 +52,13 @@ export class TableComponent implements AfterViewInit {
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          return this.exampleDatabase!.getRepoIssues(
-            this.sort.active,
-            this.sort.direction,
-            this.paginator.pageIndex
-          ).pipe(catchError(() => observableOf(null)));
+          return this.tableService
+            .getRepoIssues(
+              this.sort.active,
+              this.sort.direction,
+              this.paginator.pageIndex
+            )
+            .pipe(catchError(() => observableOf(null)));
         }),
         map((data) => {
           // Flip flag to show that loading has finished.
@@ -70,6 +82,15 @@ export class TableComponent implements AfterViewInit {
       });
   }
 
+  ngOnChanges() {
+    if (this.searchVal) {
+      const filterValue = this.searchVal;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    } else {
+      this.dataSource.data = this.data;
+    }
+  }
+
   drop(event: CdkDragDrop<GithubIssue[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
@@ -87,40 +108,5 @@ export class TableComponent implements AfterViewInit {
     }
 
     this.dataSource.data = this.data;
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-}
-
-export interface GithubApi {
-  items: GithubIssue[];
-  total_count: number;
-}
-
-export interface GithubIssue {
-  created_at: string;
-  number: string;
-  state: string;
-  title: string;
-}
-
-/** An example database that the data source uses to retrieve data for the table. */
-export class ExampleHttpDatabase {
-  constructor(private _httpClient: HttpClient) {}
-
-  getRepoIssues(
-    sort: string,
-    order: SortDirection,
-    page: number
-  ): Observable<GithubApi> {
-    const href = 'https://api.github.com/search/issues';
-    const requestUrl = `${href}?q=repo:angular/components&sort=${sort}&order=${order}&page=${
-      page + 1
-    }`;
-
-    return this._httpClient.get<GithubApi>(requestUrl);
   }
 }
