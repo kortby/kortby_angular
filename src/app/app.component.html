@@ -1,1 +1,25 @@
-<router-outlet></router-outlet>
+<app-tool-bar [myDrawer]="drawer"></app-tool-bar>
+<mat-drawer-container class="container">
+  <mat-drawer class="sidenav" #drawer>
+    <app-sidenav></app-sidenav>
+  </mat-drawer>
+  <mat-drawer-content class="content">
+    <div class="header" fxLayout="row">
+      <div fxFlex="80" fxFlex.xs="45" class="title">
+        <h1>Data Display</h1>
+      </div>
+      <div class="search-container" fxFlex="20" fxFlex.xs="50">
+        <mat-form-field class="search-field" appearance="fill">
+          <input
+            matInput
+            #searchInput
+            placeholder="Search.."
+            value=""
+            (keyup)="applySearch(searchInput.value)"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>
